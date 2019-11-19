@@ -25,7 +25,10 @@ import numpy as np #Used for converting list to array
 ##########################
 
 #Update time interval for published average data (in seconds) - This interval isn't precise as weewx sends data every minute, data should update within a minute of defined interval
-definedInterval = 300 #Seconds
+definedInterval = 10 #Seconds
+
+#The number of decimal places to use for the outputted MQTT data 
+output_number_precision = 2
 
 #Connection variables, change as required
 MQTT_server = "neocampus.univ-tlse3.fr"
@@ -148,9 +151,9 @@ def on_message(client, userdata, message):
             windAvg = windvec(np.asarray(curWindSpeed), np.asarray(curWindDir))
 
             #We set our outdoor output string, performing an average on all value lists (note that windSpeed is multiplied by 3.6 to convert back to kph)
-            outData_outside = {"pressure_mbar": Average(curPressure), "outHumidity": Average(curOutHumidity), "windSpeed_kph": 3.6*windAvg[0], "outTemp_C": Average(curOutTemp), "windDir": windAvg[1], "hourRain_cm": Average(curHourRain)}
+            outData_outside = {"pressure_mbar": round(Average(curPressure),output_number_precision), "outHumidity": round(Average(curOutHumidity),output_number_precision), "windSpeed_kph": round(3.6*windAvg[0],output_number_precision), "outTemp_C": round(Average(curOutTemp),output_number_precision), "windDir": round(windAvg[1],output_number_precision), "hourRain_cm": round(Average(curHourRain),output_number_precision)}
             #We set out indoor output string
-            outData_inside = {"inHumidity": Average(curInHumidity), "inTemp_C": Average(curInTemp)}
+            outData_inside = {"inHumidity": round(Average(curInHumidity),output_number_precision), "inTemp_C": round(Average(curInTemp),output_number_precision)}
 
             #We publish the output string converting it to JSON first
             print("Publishing message to topic", MQTT_outdoor_publish_topic)
