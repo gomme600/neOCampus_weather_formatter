@@ -25,7 +25,7 @@ import numpy as np #Used for converting list to array
 ##########################
 
 #Update time interval for published average data (in seconds) - This interval isn't precise as weewx sends data every minute, data should update within a minute of defined interval
-definedInterval = 10 #Seconds
+definedInterval = 300 #Seconds
 
 #Connection variables, change as required
 MQTT_server = "neocampus.univ-tlse3.fr"
@@ -121,19 +121,25 @@ def on_message(client, userdata, message):
            print("We loaded the JSON data!")
            #We load the data from the dictionary using the keys
 
-           #Outdoor data
-           curPressure.append(float(inData["pressure_mbar"]))
-           curOutHumidity.append(float(inData["outHumidity"]))
-           curWindSpeed.append(float(inData["windSpeed_kph"])/3.6) #Wind Speed in m/s
-           curOutTemp.append(float(inData["outTemp_C"]))
-           curWindDir.append(float(inData["windDir"]))
-           curHourRain.append(float(inData["hourRain_cm"]))
+           if ( ("pressure_mbar" in inData) & ("outHumidity" in inData) & ("windSpeed_kph" in inData) & ("outTemp_C" in inData) & ("windDir" in inData) & ("hourRain_cm" in inData) & ("inTemp_C" in inData) & ("inHumidity" in inData) ):
 
-           #Indoor data
-           curInTemp.append(float(inData["inTemp_C"]))
-           curInHumidity.append(float(inData["inHumidity"]))
+               #Outdoor data
+               curPressure.append(float(inData["pressure_mbar"]))
+               curOutHumidity.append(float(inData["outHumidity"]))
+               curWindSpeed.append(float(inData["windSpeed_kph"])/3.6) #Wind Speed in m/s
+               curOutTemp.append(float(inData["outTemp_C"]))
+               curWindDir.append(float(inData["windDir"]))
+               curHourRain.append(float(inData["hourRain_cm"]))
 
-           print("Appended all data")
+               #Indoor data
+               curInTemp.append(float(inData["inTemp_C"]))
+               curInHumidity.append(float(inData["inHumidity"]))
+
+               print("Appended all data")
+
+           else:
+
+               print("Received data error, skipped!")
 
     #We check if we have reached the defined interval yet
     if(time.time() > start_time+definedInterval):
