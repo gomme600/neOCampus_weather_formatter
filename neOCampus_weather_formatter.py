@@ -31,9 +31,9 @@ definedInterval = 10 #Seconds
 output_number_precision = 2
 
 #Connection variables, change as required
-MQTT_server = "neocampus.univ-tlse3.fr"
-MQTT_user = "test"
-MQTT_password = "test"
+MQTT_server = "MY_MQTT_SERVER"
+MQTT_user = "MY_MQTT_USERNAME"
+MQTT_password = "MY_MQTT_PASSWORD"
 #The MQTT topic where we find the weewx default loop topic: example: TestTopic/_meteo
 MQTT_topic = "TestTopic/_meteo"
 
